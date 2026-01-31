@@ -1,12 +1,11 @@
 """Pytest fixtures for testing."""
 
-
 import numpy as np
 import pandas as pd
 import pytest
 
 
-@pytest.fixture()
+@pytest.fixture
 def sample_config():
     """Sample configuration for testing."""
     return {
@@ -37,7 +36,7 @@ def sample_config():
     }
 
 
-@pytest.fixture()
+@pytest.fixture
 def sample_demand_data():
     """Sample demand data for testing."""
     np.random.seed(42)
@@ -58,7 +57,7 @@ def sample_demand_data():
     return pd.DataFrame(data)
 
 
-@pytest.fixture()
+@pytest.fixture
 def sample_fleet_state():
     """Sample fleet state for testing."""
     return pd.DataFrame(
@@ -71,7 +70,7 @@ def sample_fleet_state():
     )
 
 
-@pytest.fixture()
+@pytest.fixture
 def sample_network_costs():
     """Sample network cost matrix for testing."""
     # 3 locations, zone-to-zone costs
@@ -84,7 +83,7 @@ def sample_network_costs():
     )
 
 
-@pytest.fixture()
+@pytest.fixture
 def temp_data_dir(tmp_path):
     """Create temporary data directory structure."""
     (tmp_path / "raw").mkdir()

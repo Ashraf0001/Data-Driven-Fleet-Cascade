@@ -1,7 +1,6 @@
-"""Demand forecasting modules."""
+"""Demand forecasting module."""
 
-from src.forecasting.predictor import DemandPredictor
-from src.forecasting.trainer import ModelTrainer
+from src.forecasting.models.xgboost_model import DemandForecaster
 
 
-__all__ = ["DemandPredictor", "ModelTrainer"]
+__all__ = ["DemandForecaster"]

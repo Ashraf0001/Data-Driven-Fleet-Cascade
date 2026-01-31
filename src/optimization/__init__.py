@@ -1,7 +1,6 @@
-"""Optimization engine for fleet allocation."""
+"""Fleet optimization module."""
 
-from src.optimization.cascade import CascadingOptimizer
-from src.optimization.min_cost_flow import MinCostFlowSolver
+from src.optimization.cascade import AllocationResult, FleetOptimizer
 
 
-__all__ = ["CascadingOptimizer", "MinCostFlowSolver"]
+__all__ = ["FleetOptimizer", "AllocationResult"]

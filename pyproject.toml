@@ -173,7 +173,21 @@ select = [
 ignore = [
     "E501",   # Line too long (handled by formatter)
     "B008",   # Do not perform function calls in argument defaults
+    "B904",   # Raise from err (noisy for FastAPI HTTPException)
     "B905",   # zip without strict parameter
+    "B007",   # Loop control variable not used (intentional in some cases)
+    "N803",   # Argument name should be lowercase (X_train is ML convention)
+    "N806",   # Variable should be lowercase (X, SOURCE, SINK are conventions)
+    "UP006",  # Use builtin types (Dict -> dict) - keep for 3.9 compat
+    "UP007",  # Use X | Y for Optional - keep for 3.9 compat
+    "UP035",  # Use typing.List -> list - keep for 3.9 compat
+    "RET504", # Unnecessary assignment before return
+    "ISC001", # Conflicts with formatter
+    "ARG001", # Unused function argument (lifespan requires app)
+    "ARG002", # Unused method argument
+    "SIM108", # Use ternary operator (readability preference)
+    "SIM118", # Use key in dict (readability preference)
+    "C401",   # Unnecessary generator (readability preference)
 ]
 
 [tool.ruff.lint.isort]

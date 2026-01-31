@@ -1,7 +1,6 @@
 """Forecasting model implementations."""
 
-from src.forecasting.models.base import BaseForecastModel
-from src.forecasting.models.xgboost_model import XGBoostForecastModel
+from src.forecasting.models.xgboost_model import DemandForecaster
 
 
-__all__ = ["BaseForecastModel", "XGBoostForecastModel"]
+__all__ = ["DemandForecaster"]

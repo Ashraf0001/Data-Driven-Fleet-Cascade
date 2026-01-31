@@ -51,9 +51,9 @@ def _substitute_env_vars(config: Any) -> Any:
     """
     if isinstance(config, dict):
         return {k: _substitute_env_vars(v) for k, v in config.items()}
-    elif isinstance(config, list):
+    if isinstance(config, list):
         return [_substitute_env_vars(item) for item in config]
-    elif isinstance(config, str) and config.startswith("${") and config.endswith("}"):
+    if isinstance(config, str) and config.startswith("${") and config.endswith("}"):
         var_name = config[2:-1]
         return os.getenv(var_name, config)
     return config
