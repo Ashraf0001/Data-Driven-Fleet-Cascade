@@ -161,8 +161,21 @@ docker-logs:
 
 docker-push:
 	@echo "Pushing images to DockerHub..."
-	@echo "Make sure DOCKERHUB_USERNAME is set"
-	docker-compose push
+	@if [ -z "$$DOCKERHUB_USERNAME" ]; then \
+		if [ -f .env ]; then \
+			export $$(grep -v '^#' .env | xargs) && \
+			echo "Logging in as $$DOCKERHUB_USERNAME..." && \
+			echo "$$DOCKERHUB_TOKEN" | docker login -u "$$DOCKERHUB_USERNAME" --password-stdin && \
+			docker-compose push; \
+		else \
+			echo "Error: Set DOCKERHUB_USERNAME in .env or environment"; \
+			exit 1; \
+		fi; \
+	else \
+		echo "Logging in as $$DOCKERHUB_USERNAME..." && \
+		echo "$$DOCKERHUB_TOKEN" | docker login -u "$$DOCKERHUB_USERNAME" --password-stdin && \
+		docker-compose push; \
+	fi
 
 docker-clean:
 	docker-compose down -v --rmi local

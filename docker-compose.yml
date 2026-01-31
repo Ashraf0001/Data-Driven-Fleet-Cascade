@@ -1,5 +1,10 @@
 # Fleet Decision Platform - Docker Compose
 # Local development and testing configuration
+#
+# Usage:
+#   make docker-build   # Build images
+#   make docker-run     # Run containers
+#   make docker-push    # Push to DockerHub (requires DOCKERHUB_USERNAME in .env)
 
 version: '3.8'
 
@@ -9,6 +14,7 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile.api
+    image: ${DOCKERHUB_USERNAME:-local}/fleet-cascade-api:latest
     container_name: fleet-cascade-api
     ports:
       - "8000:8000"
@@ -33,6 +39,7 @@ services:
     build:
       context: .
       dockerfile: docker/Dockerfile.dashboard
+    image: ${DOCKERHUB_USERNAME:-local}/fleet-cascade-dashboard:latest
     container_name: fleet-cascade-dashboard
     ports:
       - "8501:8501"

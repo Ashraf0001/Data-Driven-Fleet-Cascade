@@ -1,13 +1,34 @@
 # GitHub Secrets Setup Guide
 
-This guide explains how to configure the required GitHub secrets for CI/CD workflows.
+This guide explains how to configure DockerHub credentials for CI/CD and local development.
 
-## Required Secrets
+## Local Development (.env file)
 
-Navigate to your GitHub repository:
+For local Docker operations, add credentials to your `.env` file:
+
+```bash
+# Copy the example file
+cp .env.example .env
+
+# Edit and add your DockerHub credentials
+DOCKERHUB_USERNAME=your_username
+DOCKERHUB_TOKEN=your_access_token
+```
+
+Then you can use:
+```bash
+make docker-build  # Build images
+make docker-push   # Push to DockerHub (uses .env credentials)
+```
+
+---
+
+## GitHub Actions (Repository Secrets)
+
+For CI/CD, configure secrets in your GitHub repository:
 **Settings → Secrets and variables → Actions → New repository secret**
 
-### DockerHub Secrets
+### Required Secrets
 
 | Secret Name | Description |
 |-------------|-------------|
