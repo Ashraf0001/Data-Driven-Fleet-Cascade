@@ -47,13 +47,32 @@ INFO:     Started reloader process
 INFO:     Starting Fleet Decision Platform API
 ```
 
-### 3. Explore the API
+### 3. Start the Dashboard (Optional)
+
+For a visual interface, run the Streamlit dashboard:
+
+```bash
+make streamlit
+
+# Or directly with streamlit
+uv run streamlit run app.py --server.port 8501
+```
+
+The dashboard will be available at [http://localhost:8501](http://localhost:8501).
+
+To run both the API and dashboard together:
+
+```bash
+make demo
+```
+
+### 4. Explore the API
 
 Open your browser to [http://localhost:8000/docs](http://localhost:8000/docs) to see the interactive API documentation.
 
 ![API Documentation](../assets/api-docs-screenshot.png)
 
-### 4. Make Your First API Call
+### 5. Make Your First API Call
 
 === "cURL"
 
@@ -90,7 +109,7 @@ Open your browser to [http://localhost:8000/docs](http://localhost:8000/docs) to
     http GET localhost:8000/api/v1/config
     ```
 
-### 5. Download Real Data (Optional) {#download-data}
+### 6. Download Real Data (Optional) {#download-data}
 
 To use real NYC Taxi data:
 
@@ -133,14 +152,16 @@ sequenceDiagram
 ## Available Make Commands
 
 ```bash
-make help          # Show all commands
-make run           # Start API server
-make test          # Run tests
-make lint          # Check code style
-make format        # Format code
-make download      # Download datasets
+make help           # Show all commands
+make run            # Start API server
+make streamlit      # Start Streamlit dashboard
+make demo           # Start API + dashboard together
+make test           # Run tests
+make lint           # Check code style
+make format         # Format code
+make download       # Download datasets
 make generate-fleet # Generate simulated data
-make docs          # Serve documentation
+make docs           # Serve documentation
 ```
 
 ## Common Issues

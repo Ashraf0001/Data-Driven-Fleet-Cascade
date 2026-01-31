@@ -5,11 +5,48 @@ All notable changes to the Fleet Decision Platform.
 ## [Unreleased]
 
 ### Added
-- Initial project structure
-- MkDocs documentation site
-- Configuration management system
-- Data ingestion framework
-- Fleet simulation scripts
+
+**User Interface:**
+
+- Streamlit dashboard (`app.py`) for visual testing and interaction
+- Dashboard pages: Overview, Fleet Optimization, Demand Forecast, Risk Analysis
+- `make streamlit` and `make demo` commands
+
+**Core Modules:**
+
+- XGBoost demand forecasting module (`src/forecasting/models/xgboost_model.py`)
+- OR-Tools fleet optimizer (`src/optimization/cascade.py`)
+- RUL risk prediction module (`src/risk/models/rul_model.py`)
+- Data loader and preprocessing utilities (`src/data/`)
+
+**API Endpoints:**
+
+- `POST /api/v1/optimize` - Fleet optimization
+- `POST /api/v1/optimize/simulate` - Simulation with parameters
+- `POST /api/v1/forecast` - Demand forecasting
+- `GET /api/v1/forecast/zones` - Zone-based forecasts
+- `POST /api/v1/risk/score` - Risk assessment
+- `GET /api/v1/risk/thresholds` - Risk threshold configuration
+- `GET /api/v1/config` - Configuration endpoint
+
+**Documentation:**
+
+- Dashboard user guide
+- Updated quickstart with dashboard instructions
+- Interaction methods overview
+
+**Development:**
+
+- Jupyter notebook workflow (`notebooks/01_complete_workflow.ipynb`)
+- Integration tests (14 passing)
+- Unit tests for optimization module
+
+**Data:**
+
+- Uber Fares dataset integration
+- NASA Turbofan dataset integration
+- Fleet state simulation
+- Network cost generation
 
 ### Changed
 - None

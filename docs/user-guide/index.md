@@ -22,6 +22,25 @@ graph LR
     E --> F[Take Action]
 ```
 
+## Interaction Methods
+
+Choose how you want to interact with the platform:
+
+| Method | Description | Best For |
+|--------|-------------|----------|
+| **[Dashboard](dashboard.md)** | Streamlit visual interface | Exploration, testing, demos |
+| **[API](../api/index.md)** | REST endpoints | Integration, automation |
+| **Notebook** | Jupyter workflows (`notebooks/`) | Analysis, prototyping |
+| **Python** | Direct module imports | Custom pipelines |
+
+For quick testing, we recommend starting with the **Dashboard**:
+
+```bash
+make demo  # Starts both API and Dashboard
+```
+
+Then visit [http://localhost:8501](http://localhost:8501).
+
 ## Getting Started
 
 <div class="grid cards" markdown>
@@ -143,6 +162,7 @@ Prioritize vehicle maintenance based on risk scores:
 
 Choose your focus area:
 
+- [Dashboard Guide](dashboard.md) - Use the visual interface
 - [Forecasting Guide](forecasting.md) - Learn demand forecasting
 - [Optimization Guide](optimization.md) - Master fleet optimization
 - [Risk Guide](risk.md) - Understand risk assessment

@@ -88,6 +88,7 @@ nav:
 
   - User Guide:
     - user-guide/index.md
+    - Dashboard: user-guide/dashboard.md
     - Demand Forecasting: user-guide/forecasting.md
     - Fleet Optimization: user-guide/optimization.md
     - Risk Assessment: user-guide/risk.md
