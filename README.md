@@ -30,8 +30,8 @@ A modular, config-driven platform that transforms demand forecasts, contract rul
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/fleet-cascade.git
-cd fleet-cascade
+git clone https://github.com/Ashraf0001/Data-Driven-Fleet-Cascade.git
+cd Data-Driven-Fleet-Cascade
 
 # Install dependencies with uv
 uv sync
@@ -165,13 +165,73 @@ optimization:
 - **Phase 3**: Contract intelligence (OCR + NLP)
 - **Phase 4**: Production deployment + advanced features
 
-## Documentation
+## 📚 Documentation
 
-Full documentation available at: [Documentation Site](https://yourusername.github.io/fleet-cascade)
+Full documentation available at: **[https://Ashraf0001.github.io/Data-Driven-Fleet-Cascade](https://Ashraf0001.github.io/Data-Driven-Fleet-Cascade)**
+
+### Documentation Sections
+
+| Section | Description | Link |
+|---------|-------------|------|
+| **Getting Started** | Installation, quick start, configuration | [View](docs/getting-started/index.md) |
+| **Architecture** | System design, data flow, modules | [View](docs/architecture/index.md) |
+| **User Guide** | Forecasting, optimization, risk, results | [View](docs/user-guide/index.md) |
+| **API Reference** | Endpoints, models, examples | [View](docs/api/index.md) |
+| **Developer Guide** | Structure, contributing, testing, code style | [View](docs/developer/index.md) |
+| **Operations** | Deployment, monitoring, troubleshooting | [View](docs/operations/index.md) |
+| **Reference** | Configuration, data formats, constraints | [View](docs/reference/index.md) |
+
+### Quick Links
+
+**Getting Started:**
+- [Installation Guide](docs/getting-started/installation.md)
+- [Quick Start](docs/getting-started/quickstart.md)
+- [Configuration Guide](docs/getting-started/configuration.md)
+
+**Architecture:**
+- [System Overview](docs/architecture/system-overview.md)
+- [Data Flow](docs/architecture/data-flow.md)
+- [Module Design](docs/architecture/modules.md)
+
+**User Guide:**
+- [Demand Forecasting](docs/user-guide/forecasting.md)
+- [Fleet Optimization](docs/user-guide/optimization.md)
+- [Risk Assessment](docs/user-guide/risk.md)
+- [Understanding Results](docs/user-guide/results.md)
+
+**API Reference:**
+- [API Endpoints](docs/api/endpoints.md)
+- [Request/Response Models](docs/api/models.md)
+- [API Examples](docs/api/examples.md)
+
+**Developer Guide:**
+- [Project Structure](docs/developer/structure.md)
+- [Contributing Guide](docs/developer/contributing.md)
+- [Testing Guide](docs/developer/testing.md)
+- [Code Style](docs/developer/code-style.md)
+
+**Operations:**
+- [Deployment Guide](docs/operations/deployment.md)
+- [Monitoring](docs/operations/monitoring.md)
+- [Troubleshooting](docs/operations/troubleshooting.md)
+
+**Reference:**
+- [Configuration Options](docs/reference/configuration.md)
+- [Data Formats](docs/reference/data-formats.md)
+- [Constraints Reference](docs/reference/constraints.md)
+- [Changelog](docs/reference/changelog.md)
+
+### Serve Documentation Locally
 
 ```bash
+# Install docs dependencies
+uv sync --extra docs
+
 # Serve documentation locally
 uv run mkdocs serve
+
+# Build static site
+uv run mkdocs build
 ```
 
 ## Contributing
