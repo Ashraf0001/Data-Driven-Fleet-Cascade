@@ -1,12 +1,13 @@
 # Fleet Decision Platform - Makefile
 # Common development tasks
 
-.PHONY: help install install-dev test lint format run download clean docs
+.PHONY: help install install-dev test lint format run download clean docs docker-build docker-run docker-down docker-push
 
 # Default target
 help:
 	@echo "Fleet Decision Platform - Available commands:"
 	@echo ""
+	@echo "Development:"
 	@echo "  make install      Install production dependencies"
 	@echo "  make install-dev  Install all dependencies (including dev)"
 	@echo "  make test         Run tests"
@@ -14,10 +15,27 @@ help:
 	@echo "  make lint         Lint code with ruff"
 	@echo "  make format       Format code with ruff"
 	@echo "  make run          Run API server (development)"
+	@echo "  make streamlit    Run Streamlit dashboard"
+	@echo "  make demo         Run API + Dashboard together"
+	@echo ""
+	@echo "Data & Training:"
 	@echo "  make download     Download datasets from Kaggle"
 	@echo "  make train        Train models"
 	@echo "  make pipeline     Run full optimization pipeline"
+	@echo ""
+	@echo "Docker:"
+	@echo "  make docker-build Build Docker images"
+	@echo "  make docker-run   Run containers locally"
+	@echo "  make docker-down  Stop and remove containers"
+	@echo "  make docker-push  Push images to DockerHub"
+	@echo "  make docker-logs  View container logs"
+	@echo "  make docker-clean Remove containers and images"
+	@echo ""
+	@echo "Documentation:"
 	@echo "  make docs         Serve documentation locally"
+	@echo "  make docs-build   Build documentation"
+	@echo ""
+	@echo "Cleanup:"
 	@echo "  make clean        Clean up generated files"
 	@echo ""
 
@@ -114,6 +132,41 @@ db-init:
 
 db-shell:
 	psql -h localhost -U $${POSTGRES_USER:-fleet_user} -d $${POSTGRES_DB:-fleet_db}
+
+# =============================================================================
+# Docker
+# =============================================================================
+
+docker-build:
+	docker-compose build
+
+docker-run:
+	docker-compose up -d
+	@echo ""
+	@echo "Services started:"
+	@echo "  API:       http://localhost:8000"
+	@echo "  API Docs:  http://localhost:8000/docs"
+	@echo "  Dashboard: http://localhost:8501"
+	@echo ""
+	@echo "Run 'make docker-logs' to view logs"
+	@echo "Run 'make docker-down' to stop services"
+
+docker-up: docker-run
+
+docker-down:
+	docker-compose down
+
+docker-logs:
+	docker-compose logs -f
+
+docker-push:
+	@echo "Pushing images to DockerHub..."
+	@echo "Make sure DOCKERHUB_USERNAME is set"
+	docker-compose push
+
+docker-clean:
+	docker-compose down -v --rmi local
+	@echo "Removed containers, volumes, and local images"
 
 # =============================================================================
 # Cleanup
