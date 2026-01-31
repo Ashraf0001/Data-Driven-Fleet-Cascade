@@ -37,6 +37,9 @@ env/
 .pydevproject
 .settings/
 
+# Cursor
+.cursorrules
+
 # Jupyter Notebooks
 .ipynb_checkpoints/
 *.ipynb_checkpoints
