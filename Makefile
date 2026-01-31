@@ -70,6 +70,15 @@ run:
 run-prod:
 	uv run uvicorn src.api.main:app --host 0.0.0.0 --port 8000 --workers 4
 
+streamlit:
+	uv run streamlit run app.py --server.port 8501
+
+demo:
+	@echo "Starting API server and Streamlit dashboard..."
+	@echo "API: http://localhost:8000/docs"
+	@echo "Dashboard: http://localhost:8501"
+	@(uv run uvicorn src.api.main:app --reload --port 8000 &) && sleep 2 && uv run streamlit run app.py
+
 # =============================================================================
 # Data & Training
 # =============================================================================
