@@ -1,0 +1,198 @@
+# Fleet Decision Platform - MkDocs Configuration
+# Documentation site: https://yourusername.github.io/fleet-cascade
+
+site_name: Fleet Decision Platform
+site_description: Enterprise-grade decision intelligence platform for fleet operations
+site_author: Your Name
+site_url: https://yourusername.github.io/fleet-cascade
+
+# Repository
+repo_name: yourusername/fleet-cascade
+repo_url: https://github.com/yourusername/fleet-cascade
+edit_uri: edit/main/docs/
+
+# Copyright
+copyright: Copyright &copy; 2024 Your Name
+
+# Theme Configuration
+theme:
+  name: material
+  language: en
+
+  # Color palette
+  palette:
+    # Light mode
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+  # Features
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.expand
+    - navigation.path
+    - navigation.top
+    - navigation.footer
+    - search.suggest
+    - search.highlight
+    - search.share
+    - content.tabs.link
+    - content.code.annotate
+    - content.code.copy
+    - toc.follow
+
+  # Icons
+  icon:
+    repo: fontawesome/brands/github
+    admonition:
+      note: octicons/tag-16
+      abstract: octicons/checklist-16
+      info: octicons/info-16
+      tip: octicons/squirrel-16
+      success: octicons/check-16
+      question: octicons/question-16
+      warning: octicons/alert-16
+      failure: octicons/x-circle-16
+      danger: octicons/zap-16
+      bug: octicons/bug-16
+      example: octicons/beaker-16
+      quote: octicons/quote-16
+
+# Navigation Structure
+nav:
+  - Home: index.md
+
+  - Getting Started:
+    - getting-started/index.md
+    - Installation: getting-started/installation.md
+    - Quick Start: getting-started/quickstart.md
+    - Configuration: getting-started/configuration.md
+
+  - Architecture:
+    - architecture/index.md
+    - System Overview: architecture/system-overview.md
+    - Data Flow: architecture/data-flow.md
+    - Module Design: architecture/modules.md
+
+  - User Guide:
+    - user-guide/index.md
+    - Demand Forecasting: user-guide/forecasting.md
+    - Fleet Optimization: user-guide/optimization.md
+    - Risk Assessment: user-guide/risk.md
+    - Understanding Results: user-guide/results.md
+
+  - API Reference:
+    - api/index.md
+    - Endpoints: api/endpoints.md
+    - Request/Response: api/models.md
+    - Examples: api/examples.md
+
+  - Developer Guide:
+    - developer/index.md
+    - Project Structure: developer/structure.md
+    - Contributing: developer/contributing.md
+    - Testing: developer/testing.md
+    - Code Style: developer/code-style.md
+
+  - Operations:
+    - operations/index.md
+    - Deployment: operations/deployment.md
+    - Monitoring: operations/monitoring.md
+    - Troubleshooting: operations/troubleshooting.md
+
+  - Reference:
+    - reference/index.md
+    - Configuration Options: reference/configuration.md
+    - Data Formats: reference/data-formats.md
+    - Constraints: reference/constraints.md
+    - Changelog: reference/changelog.md
+
+# Markdown Extensions
+markdown_extensions:
+  # Python Markdown
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+      toc_depth: 3
+
+  # PyMdown Extensions
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.magiclink:
+      repo_url_shorthand: true
+      user: yourusername
+      repo: fleet-cascade
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.snippets:
+      auto_append:
+        - includes/abbreviations.md
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+
+# Plugins
+plugins:
+  - search:
+      separator: '[\s\-,:!=\[\]()"/]+|(?!\b)(?=[A-Z][a-z])|\.(?!\d)|&[lg]t;'
+
+# Extra CSS/JS
+extra_css:
+  - stylesheets/extra.css
+
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+
+# Extra configuration
+extra:
+  version:
+    provider: mike
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/yourusername
+    - icon: fontawesome/brands/linkedin
+      link: https://linkedin.com/in/yourprofile
+  analytics:
+    provider: google
+    property: G-XXXXXXXXXX
+  generator: false

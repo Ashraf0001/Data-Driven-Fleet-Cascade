@@ -1,0 +1,36 @@
+{
+  "$schema": "fleet_constraints_schema.json",
+  "version": "1.0.0",
+  "description": "Fleet operational constraints for MVP",
+
+  "capacity_constraints": {
+    "max_vehicles_per_location": 20,
+    "min_vehicles_per_location": 2,
+    "total_fleet_size": 50
+  },
+
+  "operational_constraints": {
+    "max_rebalancing_distance_km": 100,
+    "max_daily_trips_per_vehicle": 10,
+    "min_idle_time_minutes": 30,
+    "max_continuous_operation_hours": 8
+  },
+
+  "service_level_constraints": {
+    "min_demand_coverage": 0.95,
+    "max_wait_time_minutes": 15,
+    "target_utilization": 0.75
+  },
+
+  "cost_constraints": {
+    "max_rebalancing_cost_per_day": 10000,
+    "cost_per_km": 0.5,
+    "penalty_per_unmet_demand": 50
+  },
+
+  "maintenance_constraints": {
+    "max_days_without_maintenance": 30,
+    "min_maintenance_duration_hours": 4,
+    "maintenance_slots_per_day": 5
+  }
+}

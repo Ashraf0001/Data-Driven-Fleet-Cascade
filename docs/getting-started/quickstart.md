@@ -1,0 +1,173 @@
+# Quick Start
+
+Get the Fleet Decision Platform running in under 5 minutes!
+
+## TL;DR
+
+```bash
+# One-liner setup
+git clone https://github.com/yourusername/fleet-cascade.git && cd fleet-cascade && uv sync && make run
+```
+
+Then visit [http://localhost:8000/docs](http://localhost:8000/docs) for the API documentation.
+
+---
+
+## Step-by-Step Guide
+
+### 1. Generate Sample Data
+
+Since downloading real data requires Kaggle credentials, let's start with simulated data:
+
+```bash
+# Generate fleet state and network costs
+uv run python scripts/generate_fleet.py
+
+# Output:
+# Fleet state saved to: data/processed/fleet_state/fleet_state.parquet
+# Network costs saved to: data/processed/fleet_state/network_costs.npy
+# Location metadata saved to: data/processed/fleet_state/locations.parquet
+```
+
+### 2. Start the API Server
+
+```bash
+# Start development server
+make run
+
+# Or directly with uvicorn
+uv run uvicorn src.api.main:app --reload --port 8000
+```
+
+You should see:
+
+```
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     Started reloader process
+INFO:     Starting Fleet Decision Platform API
+```
+
+### 3. Explore the API
+
+Open your browser to [http://localhost:8000/docs](http://localhost:8000/docs) to see the interactive API documentation.
+
+![API Documentation](../assets/api-docs-screenshot.png)
+
+### 4. Make Your First API Call
+
+=== "cURL"
+
+    ```bash
+    # Health check
+    curl http://localhost:8000/health
+
+    # Get configuration
+    curl http://localhost:8000/api/v1/config
+    ```
+
+=== "Python"
+
+    ```python
+    import httpx
+
+    # Health check
+    response = httpx.get("http://localhost:8000/health")
+    print(response.json())
+    # {"status": "healthy"}
+
+    # Get configuration
+    response = httpx.get("http://localhost:8000/api/v1/config")
+    print(response.json())
+    ```
+
+=== "HTTPie"
+
+    ```bash
+    # Health check
+    http GET localhost:8000/health
+
+    # Get configuration
+    http GET localhost:8000/api/v1/config
+    ```
+
+### 5. Download Real Data (Optional) {#download-data}
+
+To use real NYC Taxi data:
+
+```bash
+# Set up Kaggle credentials first
+# Get your API key from: https://www.kaggle.com/settings
+
+# Option 1: Environment variables
+export KAGGLE_USERNAME=your_username
+export KAGGLE_KEY=your_api_key
+
+# Option 2: Kaggle config file
+mkdir -p ~/.kaggle
+echo '{"username":"your_username","key":"your_api_key"}' > ~/.kaggle/kaggle.json
+chmod 600 ~/.kaggle/kaggle.json
+
+# Download datasets
+uv run python scripts/download_data.py
+```
+
+## What's Happening?
+
+Here's what the platform does when you start it:
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant API
+    participant Config
+    participant Logger
+
+    User->>API: Start server
+    API->>Config: Load config.yaml
+    Config-->>API: Configuration dict
+    API->>Logger: Setup logging
+    Logger-->>API: Logger ready
+    API-->>User: Server running on :8000
+```
+
+## Available Make Commands
+
+```bash
+make help          # Show all commands
+make run           # Start API server
+make test          # Run tests
+make lint          # Check code style
+make format        # Format code
+make download      # Download datasets
+make generate-fleet # Generate simulated data
+make docs          # Serve documentation
+```
+
+## Common Issues
+
+??? warning "Port 8000 already in use"
+
+    ```bash
+    # Find and kill the process
+    lsof -i :8000
+    kill -9 <PID>
+
+    # Or use a different port
+    uv run uvicorn src.api.main:app --port 8001
+    ```
+
+??? warning "Module not found errors"
+
+    Ensure you've installed the package:
+    ```bash
+    uv sync
+    ```
+
+## Next Steps
+
+Now that you have the platform running:
+
+1. **[Configure the Platform](configuration.md)** - Customize settings for your use case
+2. **[Understand the Architecture](../architecture/index.md)** - Learn how components interact
+3. **[Explore the API](../api/index.md)** - Full API reference
+4. **[User Guide](../user-guide/index.md)** - Detailed usage instructions
