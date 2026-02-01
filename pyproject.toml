@@ -27,37 +27,52 @@ classifiers = [
 ]
 
 # =============================================================================
-# Dependencies
+# Dependencies - Core only (minimal for all containers)
 # =============================================================================
 dependencies = [
-    # Data processing
+    # Data processing (required by all)
     "pandas>=2.0.0",
     "numpy>=1.24.0",
-    "pyarrow>=14.0.0", # For Parquet support
-    # Machine Learning
-    "xgboost>=2.0.0",
-    "scikit-learn>=1.3.0",
-    # Optimization
-    "ortools>=9.7.0",
-    # "pulp>=2.7.0",  # Alternative solver (uncomment if needed)
-    # API
-    "fastapi>=0.104.0",
-    "uvicorn[standard]>=0.24.0",
-    "pydantic>=2.5.0",
-    "pydantic-settings>=2.1.0",
+    "pyarrow>=14.0.0",
     # Configuration
     "pyyaml>=6.0.0",
     "python-dotenv>=1.0.0",
     # Utilities
-    "httpx>=0.25.0", # For async HTTP requests
-    "tenacity>=8.2.0", # For retries
-    "structlog>=23.2.0", # For structured logging
+    "httpx>=0.25.0",
+    "tenacity>=8.2.0",
+    "structlog>=23.2.0",
+]
+
+[project.optional-dependencies]
+# =============================================================================
+# Docker Image Groups (for optimized container builds)
+# =============================================================================
+
+# API dependencies (FastAPI server)
+api = [
+    "fastapi>=0.104.0",
+    "uvicorn[standard]>=0.24.0",
+    "pydantic>=2.5.0",
+    "pydantic-settings>=2.1.0",
+]
+
+# ML dependencies (forecasting, optimization)
+ml = [
+    "xgboost>=2.0.0",
+    "scikit-learn>=1.3.0",
+    "ortools>=9.7.0",
+]
+
+# Dashboard dependencies (Streamlit UI)
+dashboard = [
     "streamlit>=1.50.0",
     "plotly>=6.5.2",
 ]
 
-[project.optional-dependencies]
-# Development dependencies
+# =============================================================================
+# Development & Testing
+# =============================================================================
+
 dev = [
     "pytest>=7.4.0",
     "pytest-cov>=4.1.0",
@@ -66,6 +81,10 @@ dev = [
     "pre-commit>=3.5.0",
     "ipython>=8.0.0",
 ]
+
+# =============================================================================
+# Phase-specific Dependencies
+# =============================================================================
 
 # Phase 2+ dependencies
 ml-advanced = [
@@ -104,9 +123,14 @@ notebooks = [
     "seaborn>=0.13.0",
 ]
 
+# Full local development (all features)
+full = [
+    "fleet-cascade[api,ml,dashboard,dev]",
+]
+
 # All optional dependencies
 all = [
-    "fleet-cascade[dev,ml-advanced,contracts,production,docs,notebooks]",
+    "fleet-cascade[full,ml-advanced,contracts,production,docs,notebooks]",
 ]
 
 [project.urls]

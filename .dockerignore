@@ -1,0 +1,82 @@
+# Git
+.git
+.gitignore
+
+# Python
+__pycache__
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv
+venv
+ENV
+env
+.eggs
+*.egg-info
+*.egg
+dist
+build
+
+# Data files (don't include in image)
+data/
+*.parquet
+*.csv
+*.npy
+*.pkl
+*.joblib
+
+# Models (download at runtime)
+*.h5
+*.pt
+*.pth
+*.onnx
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+.cursor
+
+# Testing
+.pytest_cache
+.coverage
+htmlcov
+.tox
+.nox
+
+# Documentation
+docs/
+site/
+*.md
+!README.md
+
+# Notebooks
+notebooks/
+*.ipynb
+
+# Logs
+*.log
+logs/
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Docker
+docker-compose*.yml
+Dockerfile*
+
+# CI/CD
+.github/
+
+# Misc
+.DS_Store
+Thumbs.db
+*.bak
+*.tmp
+Makefile
+mkdocs.yml
+plan.md

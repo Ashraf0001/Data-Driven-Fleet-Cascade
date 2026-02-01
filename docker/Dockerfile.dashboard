@@ -1,7 +1,13 @@
 # Fleet Decision Platform - Dashboard Container
-# Streamlit frontend for visual interaction
+# Optimized multi-stage build for minimal image size
+#
+# Build: docker build -f docker/Dockerfile.dashboard -t fleet-cascade-dashboard .
+# Size target: ~600MB (down from 1.78GB)
 
-FROM python:3.12-slim
+# ============================================
+# Stage 1: Builder - Install dependencies
+# ============================================
+FROM python:3.12-slim AS builder
 
 WORKDIR /app
 
@@ -14,18 +20,35 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Install uv for fast dependency management
 RUN pip install --no-cache-dir uv
 
-# Copy dependency files
-COPY pyproject.toml uv.lock ./
+# Copy dependency files and README (required by pyproject.toml)
+COPY pyproject.toml uv.lock README.md ./
 
-# Install dependencies
-RUN uv sync --frozen --no-dev
+# Install ONLY api and dashboard dependencies (not ML - API handles that)
+RUN uv sync --frozen --no-dev --extra api --extra dashboard \
+    && rm -rf /root/.cache/uv
+
+# ============================================
+# Stage 2: Runtime - Final slim image
+# ============================================
+FROM python:3.12-slim AS runtime
+
+WORKDIR /app
+
+# Install only runtime dependencies (no build tools!)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    && rm -rf /var/lib/apt/lists/* \
+    && rm -rf /var/cache/apt/*
+
+# Copy virtual environment from builder
+COPY --from=builder /app/.venv /app/.venv
 
 # Copy application code
 COPY app.py ./
 COPY src/ ./src/
 COPY config/ ./config/
 
-# Create data directories
+# Create data directories (empty, mount volumes in production)
 RUN mkdir -p data/raw data/processed data/models data/outputs
 
 # Set environment variables
