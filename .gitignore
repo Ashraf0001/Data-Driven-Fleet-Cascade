@@ -86,6 +86,7 @@ docs/_build/
 
 # Plans
 *.plan.md
+plan.md
 
 # OS files
 .DS_Store
