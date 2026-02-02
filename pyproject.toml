@@ -41,6 +41,8 @@ dependencies = [
     "httpx>=0.25.0",
     "tenacity>=8.2.0",
     "structlog>=23.2.0",
+    "ipykernel>=6.31.0",
+    "pip>=26.0",
 ]
 
 [project.optional-dependencies]

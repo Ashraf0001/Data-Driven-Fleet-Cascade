@@ -49,9 +49,9 @@ forecasting:
     - day_of_week
     - month
     - is_weekend
-    - lag_1h
-    - lag_24h
-    - lag_168h  # 1 week ago
+    - demand_lag_1
+    - demand_lag_24
+    - demand_rolling_mean_24
 
   # XGBoost hyperparameters
   xgboost:
@@ -87,7 +87,7 @@ optimization:
     max_distance: 100  # Maximum rebalancing distance (km or units)
     capacity_per_vehicle: 1
     min_service_level: 0.95  # 95% demand coverage
-    max_rebalancing_cost: 10000
+    max_cost_per_vehicle: 50.0
 
   # Solver settings
   solver_settings:
@@ -104,8 +104,8 @@ risk:
   # Heuristic scoring weights
   heuristic_weights:
     age: 0.3
-    utilization: 0.4
-    maintenance_history: 0.3
+    mileage: 0.4
+    maintenance: 0.3
 
   # Risk thresholds
   thresholds:

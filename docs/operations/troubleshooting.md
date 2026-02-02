@@ -347,8 +347,8 @@ stats.print_stats(20)
 ## Getting Help
 
 1. **Check Logs:** `tail -f logs/fleet_cascade.log`
-2. **Search Issues:** [GitHub Issues](https://github.com/yourusername/fleet-cascade/issues)
-3. **Ask Community:** [GitHub Discussions](https://github.com/yourusername/fleet-cascade/discussions)
+2. **Search Issues:** [GitHub Issues](https://github.com/Ashraf0001/Data-Driven-Fleet-Cascade/issues)
+3. **Ask Community:** [GitHub Discussions](https://github.com/Ashraf0001/Data-Driven-Fleet-Cascade/discussions)
 4. **Documentation:** Review relevant guides
 
 ## Next Steps

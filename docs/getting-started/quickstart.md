@@ -6,7 +6,7 @@ Get the Fleet Decision Platform running in under 5 minutes!
 
 ```bash
 # One-liner setup
-git clone https://github.com/yourusername/fleet-cascade.git && cd fleet-cascade && uv sync && make run
+git clone https://github.com/Ashraf0001/Data-Driven-Fleet-Cascade.git && cd Data-Driven-Fleet-Cascade && uv sync && make run
 ```
 
 Then visit [http://localhost:8000/docs](http://localhost:8000/docs) for the API documentation.
@@ -14,6 +14,17 @@ Then visit [http://localhost:8000/docs](http://localhost:8000/docs) for the API 
 ---
 
 ## Step-by-Step Guide
+
+## Quick Start Flow
+
+```mermaid
+flowchart LR
+    CloneRepo[CloneRepo] --> InstallDeps[InstallDeps]
+    InstallDeps --> GenerateData[GenerateData]
+    GenerateData --> StartAPI[StartAPI]
+    StartAPI --> OpenDocs[OpenDocs]
+    StartAPI --> OptionalUI[OptionalUI]
+```
 
 ### 1. Generate Sample Data
 
@@ -70,8 +81,6 @@ make demo
 
 Open your browser to [http://localhost:8000/docs](http://localhost:8000/docs) to see the interactive API documentation.
 
-![API Documentation](../assets/api-docs-screenshot.png)
-
 ### 5. Make Your First API Call
 
 === "cURL"
@@ -82,6 +91,18 @@ Open your browser to [http://localhost:8000/docs](http://localhost:8000/docs) to
 
     # Get configuration
     curl http://localhost:8000/api/v1/config
+
+    # Run optimization (minimal example)
+    curl -X POST http://localhost:8000/api/v1/optimize \
+      -H "Content-Type: application/json" \
+      -d '{
+        "demand_forecast": {"0": [10], "1": [15], "2": [8]},
+        "fleet_state": {"vehicles": [
+          {"vehicle_id": "V001", "current_zone": 0, "status": "operational"},
+          {"vehicle_id": "V002", "current_zone": 1, "status": "operational"}
+        ]},
+        "constraints": {"max_cost_per_vehicle": 50}
+      }'
     ```
 
 === "Python"

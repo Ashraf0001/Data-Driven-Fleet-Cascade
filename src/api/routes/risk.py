@@ -14,6 +14,7 @@ from src.api.models.schemas import (
     VehicleRiskScore,
 )
 from src.risk.models.rul_model import calculate_heuristic_risk
+from src.utils.config import get_config, get_config_value
 
 
 logger = logging.getLogger(__name__)
@@ -43,7 +44,10 @@ async def calculate_risk_scores(request: RiskScoreRequest) -> RiskScoreResponse:
         fleet_df = pd.DataFrame(fleet_data)
 
         # Calculate risk scores
-        result_df = calculate_heuristic_risk(fleet_df)
+        weights = get_config_value(
+            get_config(), "risk.heuristic_weights", {"age": 0.3, "mileage": 0.4, "maintenance": 0.3}
+        )
+        result_df = calculate_heuristic_risk(fleet_df, weights=weights)
 
         # Build response
         risk_scores = []
@@ -54,9 +58,13 @@ async def calculate_risk_scores(request: RiskScoreRequest) -> RiskScoreResponse:
                     risk_score=row["risk_score"],
                     risk_category=str(row["risk_category"]),
                     factors={
-                        "age_contribution": row.get("age_months", 0) / 60 * 0.3,
-                        "mileage_contribution": row.get("mileage_km", 0) / 100000 * 0.4,
-                        "status_contribution": 0.3 if row["status"] == "maintenance" else 0,
+                        "age_contribution": row.get("age_months", 0) / 60 * weights["age"],
+                        "mileage_contribution": row.get("mileage_km", 0)
+                        / 100000
+                        * weights["mileage"],
+                        "status_contribution": weights["maintenance"]
+                        if row["status"] == "maintenance"
+                        else 0,
                     },
                 )
             )
@@ -78,15 +86,36 @@ async def calculate_risk_scores(request: RiskScoreRequest) -> RiskScoreResponse:
 @router.get("/risk/thresholds")
 async def get_risk_thresholds() -> Dict[str, Any]:
     """Get risk categorization thresholds."""
+    thresholds = get_config_value(
+        get_config(), "risk.thresholds", {"high": 0.7, "medium": 0.4, "low": 0.0}
+    )
+    weights = get_config_value(
+        get_config(), "risk.heuristic_weights", {"age": 0.3, "mileage": 0.4, "maintenance": 0.3}
+    )
     return {
         "thresholds": {
-            "high": {"min": 0.7, "max": 1.0, "action": "Schedule immediate maintenance"},
-            "medium": {"min": 0.4, "max": 0.7, "action": "Monitor closely, plan maintenance"},
-            "low": {"min": 0.0, "max": 0.4, "action": "Normal operations"},
+            "high": {
+                "min": thresholds["high"],
+                "max": 1.0,
+                "action": "Schedule immediate maintenance",
+            },
+            "medium": {
+                "min": thresholds["medium"],
+                "max": thresholds["high"],
+                "action": "Monitor closely, plan maintenance",
+            },
+            "low": {
+                "min": thresholds["low"],
+                "max": thresholds["medium"],
+                "action": "Normal operations",
+            },
         },
         "factors": {
-            "age": {"weight": 0.3, "description": "Vehicle age in months"},
-            "mileage": {"weight": 0.4, "description": "Total kilometers driven"},
-            "maintenance": {"weight": 0.3, "description": "Current maintenance status"},
+            "age": {"weight": weights["age"], "description": "Vehicle age in months"},
+            "mileage": {"weight": weights["mileage"], "description": "Total kilometers driven"},
+            "maintenance": {
+                "weight": weights["maintenance"],
+                "description": "Current maintenance status",
+            },
         },
     }

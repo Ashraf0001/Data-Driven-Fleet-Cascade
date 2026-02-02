@@ -2,12 +2,16 @@
 Fleet Decision Platform - Streamlit Dashboard
 """
 
+import os
+
 import numpy as np
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 import requests
 import streamlit as st
+
+from src.data.loader import generate_demand_forecast, generate_fleet_state
 
 
 # ==============================================================================
@@ -20,7 +24,7 @@ st.set_page_config(
     layout="wide",
 )
 
-API_BASE_URL = "http://127.0.0.1:8000"
+API_BASE_URL = os.getenv("API_BASE_URL", "http://127.0.0.1:8000")
 
 
 # ==============================================================================
@@ -53,19 +57,10 @@ def call_api(endpoint: str, method: str = "GET", data: dict = None, params: dict
 
 def generate_fleet_data(n_vehicles: int, n_zones: int) -> list:
     """Generate sample fleet data."""
-    np.random.seed(42)
-    statuses = ["operational"] * 8 + ["maintenance"] * 2
-    return [
-        {
-            "vehicle_id": f"V{i:03d}",
-            "current_zone": int(np.random.randint(0, n_zones)),
-            "capacity": 1,
-            "status": np.random.choice(statuses),
-            "mileage_km": int(np.random.randint(10000, 100000)),
-            "age_months": int(np.random.randint(6, 60)),
-        }
-        for i in range(1, n_vehicles + 1)
-    ]
+    fleet_df = generate_fleet_state(n_vehicles=n_vehicles, n_zones=n_zones, seed=42)
+    return fleet_df[
+        ["vehicle_id", "current_zone", "capacity", "status", "mileage_km", "age_months"]
+    ].to_dict("records")
 
 
 def create_zone_heatmap(demand: np.ndarray, n_zones: int):
@@ -99,6 +94,7 @@ def create_zone_heatmap(demand: np.ndarray, n_zones: int):
 with st.sidebar:
     st.title("Fleet Platform")
     st.caption("Decision Intelligence for Fleet Operations")
+    st.caption(f"API Base: {API_BASE_URL}")
 
     st.divider()
 
@@ -194,19 +190,12 @@ elif page == "Optimization":
             # Generate data
             fleet_data = generate_fleet_data(n_vehicles, n_zones)
 
-            np.random.seed(hour + day_of_week)
-            grid_size = int(np.sqrt(n_zones))
-            demand = []
-            for z in range(n_zones):
-                row, col = z // grid_size, z % grid_size
-                center_dist = np.sqrt((row - grid_size / 2) ** 2 + (col - grid_size / 2) ** 2)
-                base = max(5, 15 - center_dist * 2) + np.random.randint(0, 5)
-                if 17 <= hour <= 19:
-                    base *= 1.5
-                demand.append(int(base))
+            demand = generate_demand_forecast(
+                n_zones=n_zones, hour=hour, day_of_week=day_of_week, seed=hour + day_of_week
+            )
 
             request_data = {
-                "demand_forecast": {str(i): [d] for i, d in enumerate(demand)},
+                "demand_forecast": {str(i): [int(d)] for i, d in enumerate(demand)},
                 "fleet_state": {"vehicles": fleet_data},
                 "constraints": {"max_cost_per_vehicle": max_cost},
             }

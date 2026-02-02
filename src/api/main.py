@@ -13,6 +13,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from src.api.models.schemas import ConfigResponse, HealthResponse
 from src.api.routes import forecast, optimize, risk
+from src.utils.config import get_config, get_config_value
 
 
 # Configure logging
@@ -20,6 +21,17 @@ logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger(__name__)
+
+try:
+    _APP_CONFIG = get_config()
+except Exception as exc:  # pragma: no cover - fallback for missing config
+    logger.warning("Failed to load config: %s", exc)
+    _APP_CONFIG: Dict[str, Any] = {}
+
+
+def _config_value(key_path: str, default: Any) -> Any:
+    """Get a config value with a fallback."""
+    return get_config_value(_APP_CONFIG, key_path, default)
 
 
 @asynccontextmanager
@@ -117,16 +129,29 @@ async def get_config() -> ConfigResponse:
     """Get current platform configuration."""
     return ConfigResponse(
         forecasting={
-            "model": "xgboost",
-            "horizon_days": 7,
-            "features": ["hour", "day_of_week", "month", "is_weekend", "zone_id"],
+            "model": _config_value("forecasting.model", "xgboost"),
+            "horizon_days": _config_value("forecasting.horizon_days", 7),
+            "features": _config_value(
+                "forecasting.features", ["hour", "day_of_week", "month", "is_weekend", "zone_id"]
+            ),
         },
         optimization={
-            "solver": "ortools",
-            "stages": ["min_cost_flow"],
-            "max_cost_per_vehicle": 50.0,
+            "solver": _config_value("optimization.solver", "ortools"),
+            "stages": _config_value("optimization.stages", ["min_cost_flow"]),
+            "max_cost_per_vehicle": _config_value(
+                "optimization.constraints.max_cost_per_vehicle", 50.0
+            ),
+            "min_service_level": _config_value("optimization.constraints.min_service_level", 0.0),
         },
-        risk={"model": "heuristic", "thresholds": {"high": 0.7, "medium": 0.4, "low": 0.0}},
+        risk={
+            "model": _config_value("risk.model", "heuristic"),
+            "thresholds": _config_value(
+                "risk.thresholds", {"high": 0.7, "medium": 0.4, "low": 0.0}
+            ),
+            "heuristic_weights": _config_value(
+                "risk.heuristic_weights", {"age": 0.3, "mileage": 0.4, "maintenance": 0.3}
+            ),
+        },
     )
 
 

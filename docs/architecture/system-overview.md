@@ -64,17 +64,14 @@ graph TB
 
 | Module | Description | Status |
 |--------|-------------|--------|
-| `ingestion.py` | Data loading from external sources | MVP |
+| `loader.py` | Data loading + synthetic generators | MVP |
 | `preprocessing.py` | Data cleaning and transformation | MVP |
-| `feature_engineering.py` | Feature creation | MVP |
-| `simulation.py` | Synthetic fleet data generation | MVP |
 
-```python title="Example: Data Ingestion"
-from src.data.ingestion import DataIngestion
+```python title="Example: Data Loading"
+from src.data.loader import load_nasa_turbofan, load_uber_data
 
-ingestion = DataIngestion(config)
-demand_data = ingestion.load_nyc_taxi()
-risk_data = ingestion.load_nasa_turbofan()
+rides_df = load_uber_data("data/raw/nyc_taxi/sample.csv")
+train_df, rul_df = load_nasa_turbofan("data/raw/nasa_turbofan", dataset="FD001")
 ```
 
 ### Demand Forecasting (`src/forecasting/`)
@@ -82,52 +79,41 @@ risk_data = ingestion.load_nasa_turbofan()
 | Module | Description | Status |
 |--------|-------------|--------|
 | `models/xgboost_model.py` | XGBoost forecasting | MVP |
+| `models/xgboost_model.py` | XGBoost forecasting | MVP |
 | `models/prophet_model.py` | Prophet forecasting | Phase 2 |
-| `trainer.py` | Model training | MVP |
-| `predictor.py` | Prediction interface | MVP |
-| `hierarchy.py` | Hierarchical reconciliation | Phase 2 |
 
 ```python title="Example: Forecasting"
-from src.forecasting import DemandPredictor
+from src.forecasting.models.xgboost_model import DemandForecaster
 
-predictor = DemandPredictor(config)
-forecasts = predictor.predict(features, horizon_days=7)
+forecaster = DemandForecaster()
+# forecaster.train(...)  # Train with prepared features
+# forecasts = forecaster.predict_by_zone(...)
 ```
 
 ### Risk Scoring (`src/risk/`)
 
 | Module | Description | Status |
 |--------|-------------|--------|
-| `scoring.py` | Risk score calculation | MVP |
-| `models/classifier.py` | ML risk classifier | Phase 2 |
-| `survival.py` | Survival analysis | Phase 4 |
+| `models/rul_model.py` | Heuristic risk + ML RUL model | MVP |
 
 ```python title="Example: Risk Scoring"
-from src.risk import RiskScorer
+from src.risk.models.rul_model import calculate_heuristic_risk
 
-scorer = RiskScorer(config)
-risk_scores = scorer.calculate(fleet_state)
+risk_scores = calculate_heuristic_risk(fleet_state_df)
 ```
 
 ### Optimization Engine (`src/optimization/`)
 
 | Module | Description | Status |
 |--------|-------------|--------|
-| `cascade.py` | Orchestrates optimization stages | MVP |
-| `min_cost_flow.py` | Min-cost flow solver | MVP |
-| `milp.py` | MILP refinement | Phase 4 |
-| `constraints.py` | Constraint management | MVP |
-| `solvers/ortools_wrapper.py` | OR-Tools integration | MVP |
+| `cascade.py` | Min-cost flow optimization | MVP |
+| `solvers/` | Solver integrations (placeholder) | Phase 2 |
 
 ```python title="Example: Optimization"
-from src.optimization import CascadingOptimizer
+from src.optimization.cascade import FleetOptimizer
 
-optimizer = CascadingOptimizer(config)
-result = optimizer.optimize(
-    demand_forecast=forecasts,
-    fleet_state=fleet_state,
-    network_costs=costs
-)
+optimizer = FleetOptimizer()
+result = optimizer.optimize(fleet_df, demand, costs)
 ```
 
 ### Explainability (`src/explainability/`)
@@ -145,8 +131,8 @@ result = optimizer.optimize(
 | `main.py` | FastAPI application | MVP |
 | `routes/optimize.py` | Optimization endpoint | MVP |
 | `routes/forecast.py` | Forecast endpoint | MVP |
-| `models/requests.py` | Request schemas | MVP |
-| `models/responses.py` | Response schemas | MVP |
+| `routes/risk.py` | Risk endpoint | MVP |
+| `models/schemas.py` | Request/response schemas | MVP |
 
 ## Data Flow Between Components
 
@@ -177,8 +163,8 @@ sequenceDiagram
 
 ```python
 {
-    "location_1": np.array([10, 12, 15, ...]),  # Hourly demand
-    "location_2": np.array([8, 10, 11, ...]),
+    "0": [10, 12, 15],  # Hourly demand
+    "1": [8, 10, 11],
     ...
 }
 ```
@@ -187,7 +173,7 @@ sequenceDiagram
 
 ```python
 pd.DataFrame({
-    "asset_id": ["V001", "V002", ...],
+    "vehicle_id": ["V001", "V002", ...],
     "risk_score": [0.2, 0.8, ...],
     "risk_category": ["low", "high", ...]
 })
@@ -198,10 +184,10 @@ pd.DataFrame({
 ```python
 pd.DataFrame({
     "vehicle_id": ["V001", "V002", ...],
-    "source_location": [1, 2, ...],
-    "target_location": [3, 1, ...],
+    "from_zone": [1, 2, ...],
+    "to_zone": [3, 1, ...],
     "cost": [15.5, 22.0, ...],
-    "assignment": ["rebalance", "stay", ...]
+    "rebalanced": [True, False, ...]
 })
 ```
 

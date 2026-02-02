@@ -67,13 +67,13 @@ This guide covers detailed installation instructions for the Fleet Decision Plat
 
 ```bash
 # Clone via HTTPS
-git clone https://github.com/yourusername/fleet-cascade.git
+git clone https://github.com/Ashraf0001/Data-Driven-Fleet-Cascade.git
 
 # Or clone via SSH
-git clone git@github.com:yourusername/fleet-cascade.git
+git clone git@github.com:Ashraf0001/Data-Driven-Fleet-Cascade.git
 
 # Navigate to project
-cd fleet-cascade
+cd Data-Driven-Fleet-Cascade
 ```
 
 ## Step 3: Install Dependencies
@@ -152,7 +152,7 @@ uv run pytest tests/ -v --tb=short
 
     Ensure you have write access to the project directory:
     ```bash
-    sudo chown -R $USER:$USER /path/to/fleet-cascade
+    sudo chown -R $USER:$USER /path/to/Data-Driven-Fleet-Cascade
     ```
 
 ## Next Steps

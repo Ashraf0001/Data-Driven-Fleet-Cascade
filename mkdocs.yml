@@ -3,16 +3,16 @@
 
 site_name: Fleet Decision Platform
 site_description: Enterprise-grade decision intelligence platform for fleet operations
-site_author: Your Name
-site_url: https://yourusername.github.io/fleet-cascade
+site_author: Ashraf
+site_url: https://ashraf0001.github.io/Data-Driven-Fleet-Cascade
 
 # Repository
-repo_name: yourusername/fleet-cascade
-repo_url: https://github.com/yourusername/fleet-cascade
+repo_name: Ashraf0001/Data-Driven-Fleet-Cascade
+repo_url: https://github.com/Ashraf0001/Data-Driven-Fleet-Cascade
 edit_uri: edit/main/docs/
 
 # Copyright
-copyright: Copyright &copy; 2024 Your Name
+copyright: Copyright &copy; 2024 Ashraf
 
 # Theme Configuration
 theme:
@@ -106,6 +106,7 @@ nav:
     - Contributing: developer/contributing.md
     - Testing: developer/testing.md
     - Code Style: developer/code-style.md
+    - Refactoring Notes: developer/refactoring-redundancy.md
 
   - Operations:
     - operations/index.md
@@ -152,8 +153,8 @@ markdown_extensions:
   - pymdownx.keys
   - pymdownx.magiclink:
       repo_url_shorthand: true
-      user: yourusername
-      repo: fleet-cascade
+      user: Ashraf0001
+      repo: Data-Driven-Fleet-Cascade
   - pymdownx.mark
   - pymdownx.smartsymbols
   - pymdownx.snippets:
@@ -190,9 +191,7 @@ extra:
     provider: mike
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/yourusername
-    - icon: fontawesome/brands/linkedin
-      link: https://linkedin.com/in/yourprofile
+      link: https://github.com/Ashraf0001
   analytics:
     provider: google
     property: G-XXXXXXXXXX

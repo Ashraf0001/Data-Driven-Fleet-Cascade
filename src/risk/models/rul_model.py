@@ -13,6 +13,8 @@ import xgboost as xgb
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 from sklearn.preprocessing import StandardScaler
 
+from src.utils.config import get_config, get_config_value
+
 
 logger = logging.getLogger(__name__)
 
@@ -165,7 +167,9 @@ class RULPredictor:
             List of risk categories
         """
         if thresholds is None:
-            thresholds = {"high": 0.7, "medium": 0.4, "low": 0.0}
+            thresholds = get_config_value(
+                get_config(), "risk.thresholds", {"high": 0.7, "medium": 0.4, "low": 0.0}
+            )
 
         risk_scores = self.predict_risk_score(X)
         categories = []
@@ -266,7 +270,9 @@ def calculate_heuristic_risk(
         DataFrame with risk_score and risk_category columns
     """
     if weights is None:
-        weights = {"age": 0.3, "mileage": 0.4, "maintenance": 0.3}
+        weights = get_config_value(
+            get_config(), "risk.heuristic_weights", {"age": 0.3, "mileage": 0.4, "maintenance": 0.3}
+        )
 
     df = fleet_df.copy()
 

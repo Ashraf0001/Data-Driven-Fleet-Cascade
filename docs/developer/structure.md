@@ -5,7 +5,7 @@ Detailed guide to the codebase organization.
 ## Directory Layout
 
 ```
-fleet-cascade/
+Data-Driven-Fleet-Cascade/
 ├── .cursorrules              # Cursor AI coding guidelines
 ├── .env.example              # Environment template
 ├── .gitignore                # Git ignore rules
