@@ -58,6 +58,26 @@ The API provides programmatic access to all platform capabilities:
     console.log(data);
     ```
 
+## Request Lifecycle
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant API
+    participant Forecasting
+    participant Risk
+    participant Optimizer
+
+    Client->>API: POST /api/v1/optimize
+    API->>Forecasting: Build demand forecast
+    Forecasting-->>API: Forecasts
+    API->>Risk: Score fleet risk
+    Risk-->>API: Risk scores
+    API->>Optimizer: Optimize allocation
+    Optimizer-->>API: Allocation plan
+    API-->>Client: Response (status, allocations, kpis)
+```
+
 ## API Sections
 
 <div class="grid cards" markdown>
@@ -90,45 +110,11 @@ The API provides programmatic access to all platform capabilities:
 
 ## Response Format
 
-All API responses follow a consistent format:
+Responses follow the schema for each endpoint. Common patterns:
 
-### Success Response
-
-```json
-{
-  "status": "success",
-  "data": {
-    // Response data here
-  },
-  "metadata": {
-    "timestamp": "2024-01-15T10:30:00Z",
-    "version": "0.1.0",
-    "request_id": "req_abc123"
-  }
-}
-```
-
-### Error Response
-
-```json
-{
-  "status": "error",
-  "data": null,
-  "errors": [
-    {
-      "code": "VALIDATION_ERROR",
-      "message": "Invalid input",
-      "field": "demand_forecast",
-      "detail": "demand_forecast is required"
-    }
-  ],
-  "metadata": {
-    "timestamp": "2024-01-15T10:30:00Z",
-    "version": "0.1.0",
-    "request_id": "req_abc123"
-  }
-}
-```
+- `status` indicates success or failure.
+- Forecasting and risk endpoints include `metadata` or `summary` fields as needed.
+- Optimization returns `allocations`, `total_cost`, `coverage`, and `kpis`.
 
 ## HTTP Status Codes
 

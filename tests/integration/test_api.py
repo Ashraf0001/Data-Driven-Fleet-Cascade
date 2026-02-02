@@ -41,6 +41,9 @@ class TestHealthEndpoints:
         assert "forecasting" in data
         assert "optimization" in data
         assert "risk" in data
+        assert "thresholds" in data["risk"]
+        assert "max_cost_per_vehicle" in data["optimization"]
+        assert "min_service_level" in data["optimization"]
 
 
 class TestOptimizationEndpoints:
@@ -94,6 +97,23 @@ class TestForecastEndpoints:
         data = response.json()
         assert data["status"] == "success"
         assert "forecasts" in data
+        assert "metadata" in data
+
+    def test_forecast_empty_zones(self, client):
+        """Test forecast with empty zone list."""
+        request_data = {
+            "zone_ids": [],
+            "hour": 10,
+            "day_of_week": 2,
+            "month": 3,
+            "horizon_hours": 1,
+        }
+
+        response = client.post("/api/v1/forecast", json=request_data)
+        assert response.status_code == 200
+        data = response.json()
+        assert data["status"] == "success"
+        assert data["forecasts"] == {}
 
     def test_get_zones(self, client):
         """Test get available zones."""

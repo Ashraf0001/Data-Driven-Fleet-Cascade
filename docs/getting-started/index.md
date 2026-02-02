@@ -19,8 +19,8 @@ Before you begin, ensure you have the following installed:
 
     ```bash
     # Clone and install
-    git clone https://github.com/yourusername/fleet-cascade.git
-    cd fleet-cascade
+    git clone https://github.com/Ashraf0001/Data-Driven-Fleet-Cascade.git
+    cd Data-Driven-Fleet-Cascade
     uv sync
     ```
 
@@ -28,8 +28,8 @@ Before you begin, ensure you have the following installed:
 
     ```bash
     # Clone and install with dev dependencies
-    git clone https://github.com/yourusername/fleet-cascade.git
-    cd fleet-cascade
+    git clone https://github.com/Ashraf0001/Data-Driven-Fleet-Cascade.git
+    cd Data-Driven-Fleet-Cascade
     uv sync --all-extras
     uv run pre-commit install
     ```
@@ -76,5 +76,5 @@ Before you begin, ensure you have the following installed:
 If you run into issues:
 
 1. Check the [Troubleshooting Guide](../operations/troubleshooting.md)
-2. Search [GitHub Issues](https://github.com/yourusername/fleet-cascade/issues)
-3. Ask in [Discussions](https://github.com/yourusername/fleet-cascade/discussions)
+2. Search [GitHub Issues](https://github.com/Ashraf0001/Data-Driven-Fleet-Cascade/issues)
+3. Ask in [Discussions](https://github.com/Ashraf0001/Data-Driven-Fleet-Cascade/discussions)

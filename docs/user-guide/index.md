@@ -30,7 +30,7 @@ Choose how you want to interact with the platform:
 |--------|-------------|----------|
 | **[Dashboard](dashboard.md)** | Streamlit visual interface | Exploration, testing, demos |
 | **[API](../api/index.md)** | REST endpoints | Integration, automation |
-| **Notebook** | Jupyter workflows (`notebooks/`) | Analysis, prototyping |
+| **Notebook** | Jupyter walkthrough (`fleet_cascade_overview.ipynb`) | Analysis, prototyping |
 | **Python** | Direct module imports | Custom pipelines |
 
 For quick testing, we recommend starting with the **Dashboard**:
@@ -84,28 +84,22 @@ Then visit [http://localhost:8501](http://localhost:8501).
 Here's a typical workflow:
 
 ```python
-from src.utils.config import load_config
-from src.forecasting import DemandPredictor
-from src.optimization import CascadingOptimizer
+from src.data.loader import generate_demand_forecast, generate_fleet_state, generate_network_costs
+from src.optimization.cascade import FleetOptimizer
 
-# 1. Load configuration
-config = load_config()
+# 1. Generate inputs
+n_zones = 9
+fleet_state = generate_fleet_state(n_vehicles=20, n_zones=n_zones, seed=42)
+demand = generate_demand_forecast(n_zones=n_zones, hour=18, day_of_week=4, seed=42)
+network_costs = generate_network_costs(n_zones=n_zones, seed=42)
 
-# 2. Generate demand forecasts
-predictor = DemandPredictor(config)
-forecasts = predictor.predict(features, horizon_days=7)
+# 2. Run optimization
+optimizer = FleetOptimizer(max_cost_per_vehicle=50.0, min_service_level=0.0)
+result = optimizer.optimize(fleet_df=fleet_state, demand=demand, costs=network_costs)
 
-# 3. Run optimization
-optimizer = CascadingOptimizer(config)
-result = optimizer.optimize(
-    demand_forecast=forecasts,
-    fleet_state=fleet_state,
-    network_costs=network_costs
-)
-
-# 4. Review results
+# 3. Review results
 print(f"Total Cost: ${result.total_cost:,.2f}")
-print(f"Demand Coverage: {result.kpis['demand_coverage']:.1%}")
+print(f"Utilization: {result.kpis['utilization']:.1%}")
 ```
 
 ## Use Cases

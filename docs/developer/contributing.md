@@ -15,11 +15,11 @@ Thank you for your interest in contributing to the Fleet Decision Platform!
 
 ```bash
 # Fork the repository on GitHub, then clone
-git clone https://github.com/YOUR_USERNAME/fleet-cascade.git
-cd fleet-cascade
+git clone https://github.com/Ashraf0001/Data-Driven-Fleet-Cascade.git
+cd Data-Driven-Fleet-Cascade
 
 # Add upstream remote
-git remote add upstream https://github.com/yourusername/fleet-cascade.git
+git remote add upstream https://github.com/Ashraf0001/Data-Driven-Fleet-Cascade.git
 ```
 
 ### 2. Set Up Development Environment
@@ -223,7 +223,7 @@ Contributors are recognized in:
 
 ## Questions?
 
-- Check [GitHub Discussions](https://github.com/yourusername/fleet-cascade/discussions)
+- Check [GitHub Discussions](https://github.com/Ashraf0001/Data-Driven-Fleet-Cascade/discussions)
 - Review existing issues
 - Reach out to maintainers
 

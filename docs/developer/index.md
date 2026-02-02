@@ -46,8 +46,8 @@ Everything you need to contribute to and extend the Fleet Decision Platform.
 
 ```bash
 # Clone repository
-git clone https://github.com/yourusername/fleet-cascade.git
-cd fleet-cascade
+git clone https://github.com/Ashraf0001/Data-Driven-Fleet-Cascade.git
+cd Data-Driven-Fleet-Cascade
 
 # Install all dependencies
 uv sync --all-extras
@@ -166,6 +166,6 @@ src/
 
 ## Getting Help
 
-- Check existing [GitHub Issues](https://github.com/yourusername/fleet-cascade/issues)
+- Check existing [GitHub Issues](https://github.com/Ashraf0001/Data-Driven-Fleet-Cascade/issues)
 - Read the [Architecture docs](../architecture/index.md)
-- Ask in [Discussions](https://github.com/yourusername/fleet-cascade/discussions)
+- Ask in [Discussions](https://github.com/Ashraf0001/Data-Driven-Fleet-Cascade/discussions)

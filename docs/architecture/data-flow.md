@@ -109,7 +109,7 @@ raw_data = ingestion.load_nyc_taxi()
 graph LR
     A[(Raw Data)] -->|Load| B[DataFrame]
     B -->|Time Features| C[hour, day, month]
-    B -->|Lag Features| D[lag_1h, lag_24h]
+    B -->|Lag Features| D[demand_lag_1, demand_lag_24]
     B -->|Aggregations| E[zone_demand]
     C & D & E -->|Combine| F[(Feature Matrix)]
 ```
@@ -119,12 +119,11 @@ graph LR
 
 ```python
 # Example: Feature engineering
-from src.data.feature_engineering import FeatureEngineer
+from src.data.preprocessing import create_demand_features
 
-engineer = FeatureEngineer(config)
-features = engineer.create_features(raw_data)
-# Returns: DataFrame with columns [location_id, timestamp, hour,
-#          day_of_week, lag_1h, lag_24h, demand, ...]
+features_df, feature_cols = create_demand_features(demand_df)
+# Returns: DataFrame with columns [hour, day_of_week, month, is_weekend,
+#          demand_lag_1, demand_lag_24, demand_rolling_mean_24, ...]
 ```
 
 ### Stage 3: Model Training

@@ -40,7 +40,9 @@
 
 ## Overview
 
-The **Fleet Decision Platform** is an enterprise-grade decision intelligence system that transforms demand forecasts, contract rules, and risk predictions into explainable, cost-optimized fleet allocation decisions.
+The **Fleet Decision Platform** is an enterprise-grade decision intelligence system that transforms
+demand forecasts, fleet state, and risk predictions into explainable, cost-optimized fleet allocation
+decisions.
 
 ```mermaid
 graph LR
@@ -56,9 +58,9 @@ graph LR
 
 | Capability | Description | Phase |
 |------------|-------------|-------|
-| **Demand Forecasting** | Multi-location time-series with XGBoost/Prophet | MVP |
-| **Fleet Optimization** | Min-cost flow + MILP cascading optimization | MVP |
-| **Risk Prediction** | Asset failure and violation prediction | Phase 2 |
+| **Demand Forecasting** | Multi-location time-series with XGBoost | MVP |
+| **Fleet Optimization** | Min-cost flow allocation | MVP |
+| **Risk Prediction** | Heuristic vehicle risk scoring | MVP |
 | **Contract Intelligence** | NLP extraction from contract PDFs | Phase 3 |
 | **Explainability** | SHAP analysis and cost drivers | Phase 2 |
 
@@ -68,8 +70,8 @@ graph LR
 
     ```bash
     # Clone the repository
-    git clone https://github.com/yourusername/fleet-cascade.git
-    cd fleet-cascade
+    git clone https://github.com/Ashraf0001/Data-Driven-Fleet-Cascade.git
+    cd Data-Driven-Fleet-Cascade
 
     # Install dependencies
     uv sync
@@ -105,7 +107,7 @@ graph LR
     optimization:
       solver: "ortools"
       constraints:
-        max_distance: 100
+        max_cost_per_vehicle: 50.0
     ```
 
 ## Who Is This For?
@@ -162,16 +164,15 @@ graph TB
 
     - [x] Project structure and configuration
     - [x] Data ingestion pipeline
-    - [ ] XGBoost demand forecasting
-    - [ ] Min-cost flow optimization
-    - [ ] Basic API endpoints
-    - [ ] Integration testing
+    - [x] XGBoost demand forecasting (heuristic fallback)
+    - [x] Min-cost flow optimization
+    - [x] Basic API endpoints
+    - [x] Integration testing
 
 ## Getting Help
 
 - :material-book: [Documentation](getting-started/index.md) - Comprehensive guides and references
-- :material-github: [GitHub Issues](https://github.com/yourusername/fleet-cascade/issues) - Bug reports and feature requests
-- :material-email: [Contact](mailto:your.email@example.com) - Direct support
+- :material-github: [GitHub Issues](https://github.com/Ashraf0001/Data-Driven-Fleet-Cascade/issues) - Bug reports and feature requests
 
 ---
 

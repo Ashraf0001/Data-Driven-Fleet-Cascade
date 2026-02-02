@@ -15,7 +15,13 @@ import logging
 from pathlib import Path
 
 import numpy as np
-import pandas as pd
+
+from src.data.loader import (
+    generate_fleet_state,
+    generate_location_metadata,
+    generate_network_costs,
+)
+from src.utils.config import get_config, get_config_value
 
 
 # Setup logging
@@ -23,139 +29,29 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(
 logger = logging.getLogger(__name__)
 
 
-def generate_fleet_state(
-    num_vehicles: int = 50,
-    num_locations: int = 5,
-    seed: int = 42,
-) -> pd.DataFrame:
-    """Generate fleet state DataFrame.
-
-    Args:
-        num_vehicles: Total number of vehicles
-        num_locations: Number of locations/zones
-        seed: Random seed for reproducibility
-
-    Returns:
-        DataFrame with vehicle information
-    """
-    np.random.seed(seed)
-
-    # Distribute vehicles across locations
-    location_ids = np.random.choice(
-        range(1, num_locations + 1),
-        size=num_vehicles,
-        p=np.ones(num_locations) / num_locations,  # Uniform distribution
-    )
-
-    # Generate vehicle statuses
-    status_choices = ["operational", "maintenance", "downtime"]
-    status_probs = [0.85, 0.10, 0.05]
-    statuses = np.random.choice(status_choices, size=num_vehicles, p=status_probs)
-
-    # Generate vehicle ages (in days)
-    ages = np.random.exponential(scale=365, size=num_vehicles).astype(int)
-
-    # Generate utilization rates
-    utilization = np.clip(np.random.normal(0.7, 0.15, num_vehicles), 0.1, 1.0)
-
-    fleet_df = pd.DataFrame(
-        {
-            "vehicle_id": [f"V{i:04d}" for i in range(num_vehicles)],
-            "location_id": location_ids,
-            "capacity": 1,
-            "status": statuses,
-            "age_days": ages,
-            "utilization_rate": utilization.round(3),
-            "last_maintenance_days": np.random.randint(0, 30, num_vehicles),
-        }
-    )
-
-    return fleet_df
-
-
-def generate_network_costs(
-    num_locations: int = 5,
-    seed: int = 42,
-) -> np.ndarray:
-    """Generate zone-to-zone cost matrix.
-
-    Args:
-        num_locations: Number of locations/zones
-        seed: Random seed for reproducibility
-
-    Returns:
-        2D numpy array of costs
-    """
-    np.random.seed(seed)
-
-    # Generate random coordinates for locations
-    coords = np.random.rand(num_locations, 2) * 100  # 100km x 100km area
-
-    # Calculate Euclidean distances
-    costs = np.zeros((num_locations, num_locations))
-    for i in range(num_locations):
-        for j in range(num_locations):
-            if i != j:
-                dist = np.sqrt(np.sum((coords[i] - coords[j]) ** 2))
-                # Add some randomness to costs (traffic, etc.)
-                costs[i, j] = dist * np.random.uniform(0.9, 1.1)
-
-    return costs.round(2)
-
-
-def generate_location_metadata(
-    num_locations: int = 5,
-    seed: int = 42,
-) -> pd.DataFrame:
-    """Generate location metadata.
-
-    Args:
-        num_locations: Number of locations/zones
-        seed: Random seed for reproducibility
-
-    Returns:
-        DataFrame with location information
-    """
-    np.random.seed(seed)
-
-    # NYC-inspired zone names
-    zone_names = [
-        "Manhattan-Midtown",
-        "Manhattan-Downtown",
-        "Brooklyn-Heights",
-        "Queens-Astoria",
-        "Bronx-South",
-        "Manhattan-Uptown",
-        "Brooklyn-Downtown",
-        "Queens-LIC",
-        "Staten-Island",
-        "JFK-Airport",
-    ]
-
-    locations_df = pd.DataFrame(
-        {
-            "location_id": range(1, num_locations + 1),
-            "name": zone_names[:num_locations],
-            "latitude": 40.7 + np.random.uniform(-0.1, 0.1, num_locations),
-            "longitude": -74.0 + np.random.uniform(-0.1, 0.1, num_locations),
-            "avg_demand": np.random.randint(50, 200, num_locations),
-            "max_capacity": np.random.randint(15, 30, num_locations),
-        }
-    )
-
-    return locations_df
-
-
 def main():
     """Main entry point."""
+    config = get_config()
+    default_num_vehicles = get_config_value(config, "data.fleet.num_vehicles", 50)
+    default_num_locations = get_config_value(config, "data.fleet.locations", 5)
+    default_seed = get_config_value(config, "data.fleet.simulation_seed", 42)
+
     parser = argparse.ArgumentParser(description="Generate simulated fleet data")
     parser.add_argument(
-        "--num-vehicles", type=int, default=50, help="Number of vehicles (default: 50)"
+        "--num-vehicles",
+        type=int,
+        default=default_num_vehicles,
+        help="Number of vehicles (default: config value)",
     )
     parser.add_argument(
-        "--num-locations", type=int, default=5, help="Number of locations (default: 5)"
+        "--num-locations",
+        type=int,
+        default=default_num_locations,
+        help="Number of locations (default: config value)",
     )
-    parser.add_argument("--seed", type=int, default=42, help="Random seed (default: 42)")
+    parser.add_argument(
+        "--seed", type=int, default=default_seed, help="Random seed (default: config value)"
+    )
     parser.add_argument(
         "--output-dir",
         type=str,
@@ -174,17 +70,24 @@ def main():
 
     # Generate fleet state
     fleet_df = generate_fleet_state(
-        num_vehicles=args.num_vehicles,
-        num_locations=args.num_locations,
+        n_vehicles=args.num_vehicles,
+        n_zones=args.num_locations,
         seed=args.seed,
+        status_distribution=get_config_value(config, "data.fleet.status_distribution", None),
     )
+    fleet_df["location_id"] = fleet_df["current_zone"] + 1
+    fleet_df["age_days"] = fleet_df["age_months"] * 30
+    fleet_df["utilization_rate"] = np.clip(
+        np.random.normal(0.7, 0.15, len(fleet_df)), 0.1, 1.0
+    ).round(3)
+    fleet_df["last_maintenance_days"] = np.random.randint(0, 30, len(fleet_df))
     fleet_path = output_dir / "fleet_state.parquet"
     fleet_df.to_parquet(fleet_path, index=False)
     logger.info(f"Fleet state saved to: {fleet_path}")
 
     # Generate network costs
     costs = generate_network_costs(
-        num_locations=args.num_locations,
+        n_zones=args.num_locations,
         seed=args.seed,
     )
     costs_path = output_dir / "network_costs.npy"
@@ -193,7 +96,7 @@ def main():
 
     # Generate location metadata
     locations_df = generate_location_metadata(
-        num_locations=args.num_locations,
+        n_locations=args.num_locations,
         seed=args.seed,
     )
     locations_path = output_dir / "locations.parquet"

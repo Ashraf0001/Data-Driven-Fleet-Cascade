@@ -8,6 +8,9 @@ import yaml
 from dotenv import load_dotenv
 
 
+_CONFIG_CACHE: dict[str, Any] | None = None
+
+
 def load_config(config_path: str | Path = "config/config.yaml") -> dict[str, Any]:
     """Load configuration from YAML file.
 
@@ -35,6 +38,25 @@ def load_config(config_path: str | Path = "config/config.yaml") -> dict[str, Any
     # Substitute environment variables
     config = _substitute_env_vars(config)
 
+    return config
+
+
+def get_config(config_path: str | Path = "config/config.yaml") -> dict[str, Any]:
+    """Load configuration once and reuse it.
+
+    Args:
+        config_path: Path to the configuration file
+
+    Returns:
+        Configuration dictionary
+    """
+    global _CONFIG_CACHE  # noqa: PLW0603 - cached config is intentional
+    if config_path == "config/config.yaml" and _CONFIG_CACHE is not None:
+        return _CONFIG_CACHE
+
+    config = load_config(config_path)
+    if config_path == "config/config.yaml":
+        _CONFIG_CACHE = config
     return config
 
 
